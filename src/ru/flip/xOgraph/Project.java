@@ -3,7 +3,6 @@
  */
 package ru.flip.xOgraph;
 
-import java.awt.Window;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;

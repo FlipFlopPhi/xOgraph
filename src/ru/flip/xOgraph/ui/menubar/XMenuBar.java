@@ -3,7 +3,6 @@
  */
 package ru.flip.xOgraph.ui.menubar;
 
-import java.awt.DisplayMode;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

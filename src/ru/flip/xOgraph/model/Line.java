@@ -29,6 +29,7 @@ public class Line {
 		pieces = positions;
 	}
 	
+	@Override
 	public Line clone() {
 		return new Line(pieces);
 	}

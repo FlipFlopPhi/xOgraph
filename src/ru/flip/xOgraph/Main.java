@@ -25,7 +25,6 @@ import ru.flip.xOgraph.model.Map;
 import ru.flip.xOgraph.ui.RegionTab;
 import ru.flip.xOgraph.ui.XToolBar;
 import ru.flip.xOgraph.ui.menubar.XMenuBar;
-import ru.flip.xOgraph.ui.windows.DistanceWindow;
 
 /**
  * @author Vizu

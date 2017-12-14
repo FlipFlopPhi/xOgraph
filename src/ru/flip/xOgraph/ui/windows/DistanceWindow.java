@@ -61,7 +61,7 @@ public class DistanceWindow extends Window {
 			fourHexDistance = singleHexDistance * 4d;
 			/*The Adjacency-distance is the amount of pixels between the 
 				center of 1 hex and its adjacent neighbor */
-			adjacencyDistance = (double)Project.canvas.radius *Math.sqrt(3);
+			adjacencyDistance = Project.canvas.radius *Math.sqrt(3);
 			prettyFourHexDistance = getPrettyCeiling(fourHexDistance);
 			barLength =  (int) (prettyFourHexDistance/singleHexDistance*adjacencyDistance);
 			resizing = false;

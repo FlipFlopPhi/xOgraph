@@ -2,7 +2,6 @@ package ru.flip.xOgraph.tools;
 
 import java.awt.event.MouseEvent;
 
-
 import ru.flip.xOgraph.Project;
 import ru.flip.xOgraph.Project.Tool;
 import ru.flip.xOgraph.model.Hex;

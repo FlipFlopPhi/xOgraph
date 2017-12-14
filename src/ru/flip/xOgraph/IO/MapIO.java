@@ -24,7 +24,6 @@ import ru.flip.xOgraph.model.Map;
  * This class is used to take care of saving and loading maps.
  * Maps are stored in a .xmp file. .xmp files use plaintext to represent everything.
  * The syntax used for .xmp files can be found at the git page.
- * TODO put the syntax up on git.
  * @author Vizu
  *
  */

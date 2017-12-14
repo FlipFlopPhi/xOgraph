@@ -20,6 +20,7 @@ public class HexUtil {
 	 * @return a list consisting of all positions that are on the line from a to b (excluding b).
 	 * @deprecated
 	 */
+	@Deprecated
 	public static List<Position> getLine2(Position a, Position b) {
 		List<Position> pieces = new LinkedList<Position>();
 		MicroPosition current = a.toMicroPosition();
@@ -126,7 +127,7 @@ public class HexUtil {
 		ShiftStruct(Shift shift, int amount) {
 			this.shift = shift;
 			ratio = 1d;
-			ratioIncr = 1d / (double)amount;
+			ratioIncr = 1d / amount;
 		}
 		
 		double next() {
@@ -162,9 +163,9 @@ public class HexUtil {
 		}
 		
 		double q = (vecX * Math.cos(-angle) - vecY * Math.sin(-angle))
-				/((double)radius *3/2);
+				/(radius *3/2);
 		double r = (vecX * Math.cos(-angle - 2*Math.PI / 3) - vecY * Math.sin(-angle - 2*Math.PI / 3)) 
-				/ ((double)radius *3/2);
+				/ (radius *3/2);
 		//convert axial to cube
 		double x = q;
 		double z = r;

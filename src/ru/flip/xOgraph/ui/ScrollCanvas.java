@@ -6,6 +6,7 @@ package ru.flip.xOgraph.ui;
 import java.awt.Polygon;
 
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 import ru.flip.xOgraph.Project;
 import ru.flip.xOgraph.model.Region;
@@ -24,9 +25,9 @@ public class ScrollCanvas extends JScrollPane {
 	public ScrollCanvas() {
 		super(Project.canvas);
 		createHorizontalScrollBar();
-		setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		createVerticalScrollBar();
-		setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
 	}
 	

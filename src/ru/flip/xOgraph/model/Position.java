@@ -72,8 +72,8 @@ public class Position {
 		qs[depth] = q;
 		rs[depth] = r;
 		for(int i=depth; i>0; i--) {
-			double dr = ((double)qs[i]+3d*(double)rs[i])/7;
-			qs[i-1] = (int)Math.round(2d*dr- (double)rs[i]);
+			double dr = (qs[i]+3d*rs[i])/7;
+			qs[i-1] = (int)Math.round(2d*dr- rs[i]);
 			rs[i-1] = (int)Math.round(dr);
 		}
 		col = qs[0];
@@ -119,6 +119,7 @@ public class Position {
 		return shifts[depth];
 	}
 
+	@Override
 	public String toString() {
 		String out = "("+col + ","+row+")";
 		for(Shift shift : shifts) {

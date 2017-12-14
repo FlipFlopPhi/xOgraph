@@ -41,6 +41,7 @@ public class MicroPosition {
 		}
 	}
 	
+	@Override
 	public String toString() {
 		return ""+q+","+r+" in "+depth;
 	}
