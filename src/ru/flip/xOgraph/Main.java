@@ -49,6 +49,8 @@ public class Main {
 	 */
 	@SuppressWarnings("serial")
 	public static void main(String[] args) {
+		
+		//Help me
 		JFrame frame = Project.frame;
 		frame.setLayout(new BorderLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
