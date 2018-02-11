@@ -14,13 +14,24 @@ import java.util.List;
 public class Map {
 	
 	private Hex[][] hexes;
-	public final List<Point> points;
+	public final List<Location> points;
 	public final List<Region> regions;
 	public final List<Line> lines;
 	/**
 	 * The distance between two hexes at depth 0 in meters.
 	 */
 	public double singleHexDistance = 40_000;
+	
+	public static final int MODIFIED_BGIMAGE = 7;
+	public static final int MODIFIED_GRID = 6;
+	public static final int MODIFIED_LOCATIONS = 5;
+	public static final int MODIFIED_LINES = 4;
+	public static final int MODIFIED_HEXDISTANCE = 3;
+	public static final int MODIFIED_REGION = 2;
+	public static final int MODIFIED_HEXES = 1;
+	public static final int MODIFIED_ALL = 0;
+	
+	
 	
 	/**
 	 * Creates a (col x rows) map.
@@ -35,7 +46,7 @@ public class Map {
 			}
 		}
 		
-		points = new LinkedList<Point>();
+		points = new LinkedList<Location>();
 		regions = new LinkedList<Region>();
 		lines = new LinkedList<Line>();
 	}
@@ -57,8 +68,8 @@ public class Map {
 			}
 		}
 		
-		points = new LinkedList<Point>();
-		for (Point point : oldMap.points) {
+		points = new LinkedList<Location>();
+		for (Location point : oldMap.points) {
 			if(point.getPosition().getCol() < hexes.length
 					& point.getPosition().getRow() < hexes[0].length) {
 				points.add(point);
@@ -170,32 +181,12 @@ public class Map {
 	}
 
 	/**
-	 * Adds the current point of interest to the map.
-	 * @param point the point of interest that is added
-	 */
-	public void addPoint(Point point) {
-		points.add(point);
-	}
-
-	/**
-	 * Remove a point of interest from the given hex and the map.
-	 * @param hex the hex from which we want to remove the point of interest
-	 */
-	public void removePointFromHex(Hex hex) {
-		Point point = hex.getPOI();
-		if (point == null)
-			return;
-		hex.setPOI(null);
-		points.remove(point);
-	}
-
-	/**
 	 * Returns an array of all points on this map. Editing the array does not change the points on this map;
 	 *  changing the points on the map should be done through addPoint and removePointFromHex.
 	 * @return an array of all points on this map
 	 */
-	public Point[] getPoints() {
-		Point[] out = new Point[points.size()];
+	public Location[] getPoints() {
+		Location[] out = new Location[points.size()];
 		return points.toArray(out);
 	}
 

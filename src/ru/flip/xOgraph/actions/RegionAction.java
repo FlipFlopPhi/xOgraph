@@ -4,6 +4,7 @@
 package ru.flip.xOgraph.actions;
 
 import ru.flip.xOgraph.Project;
+import ru.flip.xOgraph.model.Map;
 import ru.flip.xOgraph.model.Region;
 
 /**
@@ -12,8 +13,9 @@ import ru.flip.xOgraph.model.Region;
  * @author Vizu
  *
  */
-public class BorderAction extends AbstractAction {
+public class RegionAction extends AbstractAction {
 
+	
 	private Region region;
 	private static int regionNr = 0;
 
@@ -21,7 +23,7 @@ public class BorderAction extends AbstractAction {
 	 * This action will add the region to the map when commited.
 	 * @param currentBorder the region that is added to the map
 	 */
-	public BorderAction(Region currentBorder) {
+	public RegionAction(Region currentBorder) {
 		region = currentBorder;
 		region.name = "Region " + regionNr;
 		regionNr++;
@@ -46,5 +48,10 @@ public class BorderAction extends AbstractAction {
 	public void undo() {
 		Project.getMap().regions.remove(region);
 	}
+	
+	@Override
+	public int[] getModifications() {
+		return new int[] {Map.MODIFIED_REGION};
+	}	
 
 }

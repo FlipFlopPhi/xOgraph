@@ -18,6 +18,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import ru.flip.xOgraph.Project;
+import ru.flip.xOgraph.model.Map;
 import ru.flip.xOgraph.model.Region;
 
 /**
@@ -71,7 +72,7 @@ public class RegionTab extends JPanel {
 				Region selected = regionList.getSelectedValue();
 				if (selected != null) {
 					regionOptionPane.showDialog(selected);
-					Project.repaint();
+					Project.repaint(new int[] {Map.MODIFIED_REGION});
 				}
 			}
 		});
@@ -84,7 +85,7 @@ public class RegionTab extends JPanel {
 				Region selected = regionList.getSelectedValue();
 				if (selected != null) {
 					Project.scrollCanvas.focusOn(selected);
-					Project.repaint();
+					Project.repaint(new int[] {Map.MODIFIED_ALL});
 				}
 			}
 		});
@@ -97,7 +98,7 @@ public class RegionTab extends JPanel {
 				Region selected = regionList.getSelectedValue();
 				if (selected != null) {
 					Project.getMap().regions.remove(selected);
-					Project.repaint();
+					Project.repaint(new int[] {Map.MODIFIED_REGION});
 				}
 			}
 		});

@@ -9,6 +9,7 @@ import java.util.List;
 import ru.flip.xOgraph.Project;
 import ru.flip.xOgraph.model.Hex;
 import ru.flip.xOgraph.model.HexToken;
+import ru.flip.xOgraph.model.Map;
 import ru.flip.xOgraph.model.Position;
 
 /**
@@ -67,6 +68,11 @@ public class PaintLineAction extends AbstractAction {
 		for(Target target : targets) {
 			target.hex.token = target.oldColor;
 		}
+	}
+
+	@Override
+	public int[] getModifications() {
+		return new int[] {Map.MODIFIED_HEXES};
 	}
 
 }

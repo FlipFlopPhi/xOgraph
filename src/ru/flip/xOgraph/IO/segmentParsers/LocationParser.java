@@ -10,7 +10,7 @@ import ru.flip.xOgraph.IO.IOUtil;
 import ru.flip.xOgraph.IO.SegmentParser;
 import ru.flip.xOgraph.model.Hex;
 import ru.flip.xOgraph.model.Map;
-import ru.flip.xOgraph.model.Point;
+import ru.flip.xOgraph.model.Location;
 import ru.flip.xOgraph.model.Position;
 
 /**
@@ -29,17 +29,14 @@ public abstract class LocationParser extends SegmentParser {
 		@Override
 		public void readElement(Map map, String[] values) {
 			Position position = IOUtil.parsePosition(values[0]);
-			Hex hex = map.getHex(position);
-			if (hex!=null) {
-				Point point = new Point(hex);
-				map.addPoint(point);
-				point.name = values[1];
-			}
+			Location point = new Location(position);
+			map.points.add(point);
+			point.name = values[1];
 		}
 
 		@Override
 		public void writeElement(Object element, Writer writer) throws IOException {
-			Point point = (Point) element;
+			Location point = (Location) element;
 			String out = "";
 			out += point.getPosition().toMicroString();
 			out += ";" + point.name;

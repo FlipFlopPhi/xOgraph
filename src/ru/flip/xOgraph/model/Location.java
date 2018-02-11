@@ -13,15 +13,13 @@ import javax.imageio.ImageIO;
  * @author Vizu
  *
  */
-public class Point {
+public class Location {
 
-	private Hex location;
+	private Position position;
 	private Image image;
 	public String name = "";
 	
-	public Point(Hex hex) {
-		hex.setPOI(this);
-		location = hex;
+	public Location(Position position) {
 		setImage(new File("assets/icons/POIIcon.png"));
 	}
 	
@@ -38,7 +36,7 @@ public class Point {
 	}
 
 	public Position getPosition() {
-		return location.getPosition();
+		return position;
 	}
 
 }

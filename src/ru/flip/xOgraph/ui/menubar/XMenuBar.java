@@ -57,7 +57,7 @@ public class XMenuBar extends JMenuBar {
 					return;
 				Project.bgImage.flush();
 				Project.bgImage = null;
-				Project.repaint();
+				Project.repaint(new int[] {});
 			}
 		});
 		viewMenu.add(itemClearImage);
@@ -74,7 +74,7 @@ public class XMenuBar extends JMenuBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Project.imageOnForeground = imageToggle.isSelected();
-				Project.repaint();
+				Project.repaint(new int[] {Map.MODIFIED_BGIMAGE});
 			}
 		});
 		viewMenu.add(imageToggle);
@@ -104,7 +104,6 @@ public class XMenuBar extends JMenuBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Project.undo();
-				Project.repaint();
 			}
 		});
 		this.add(undoButton);
@@ -120,7 +119,6 @@ public class XMenuBar extends JMenuBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Project.redo();
-				Project.repaint();
 			}
 		});
 		this.add(redoButton);
@@ -131,7 +129,7 @@ public class XMenuBar extends JMenuBar {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Project.drawGrid = gridRadio.isSelected();
-				Project.repaint();
+				Project.repaint(new int[] {Map.MODIFIED_HEXES});
 			}
 		});
 		gridRadio.setSelected(true);
@@ -187,8 +185,8 @@ public class XMenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 				double scale = Double.parseDouble(JOptionPane.showInputDialog("Scale:", "1"));
 				Map map = Project.getMap();
-				map.resize((int) Math.ceil(map.getWidth() * scale), (int) Math.ceil(map.getHeight() * scale));
-				Project.repaint();
+				Project.commit(new ResizeAction((int) Math.ceil(map.getWidth() * scale)
+						, (int) Math.ceil(map.getHeight() * scale)));
 			}
 		});
 		mapMenu.add(itemRescale);
@@ -212,7 +210,6 @@ public class XMenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 				Map map = Project.getMap();
 				Project.commit(new ResizeAction(map.getWidth() + 1, map.getHeight()));
-				Project.repaint();
 			}
 		});
 		mapMenu.add(itemAddColumn);
@@ -225,7 +222,6 @@ public class XMenuBar extends JMenuBar {
 				Map map = Project.getMap();
 				if (map.getWidth() > 1) {
 					Project.commit(new ResizeAction(map.getWidth() - 1, map.getHeight()));
-					Project.repaint();
 				}
 			}
 		});
@@ -238,7 +234,6 @@ public class XMenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 				Map map = Project.getMap();
 				Project.commit(new ResizeAction(map.getWidth(), map.getHeight() + 1));
-				Project.repaint();
 			}
 		});
 		mapMenu.add(itemAddRow);
@@ -251,7 +246,6 @@ public class XMenuBar extends JMenuBar {
 				Map map = Project.getMap();
 				if (map.getHeight() > 1) {
 					Project.commit(new ResizeAction(map.getWidth(), map.getHeight() - 1));
-					Project.repaint();
 				}
 			}
 		});

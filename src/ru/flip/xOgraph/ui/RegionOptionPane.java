@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import ru.flip.xOgraph.Project;
+import ru.flip.xOgraph.model.Map;
 import ru.flip.xOgraph.model.Region;
 
 /**
@@ -41,7 +42,7 @@ public class RegionOptionPane extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				closeDialog(true);
-				Project.repaint();
+				Project.repaint(new int[] {Map.MODIFIED_REGION});
 			}
 		});
 		JButton cancelButton = new JButton("Cancel");

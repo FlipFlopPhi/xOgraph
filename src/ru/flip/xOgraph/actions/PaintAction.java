@@ -5,6 +5,7 @@ package ru.flip.xOgraph.actions;
 
 import ru.flip.xOgraph.model.Hex;
 import ru.flip.xOgraph.model.HexToken;
+import ru.flip.xOgraph.model.Map;
 
 /**
  * This action recolors one single hex.
@@ -45,6 +46,11 @@ public class PaintAction extends AbstractAction {
 	@Override
 	public void undo() {
 		target.token = oldToken;
+	}
+
+	@Override
+	public int[] getModifications() {
+		return new int[] {Map.MODIFIED_HEXES};
 	}
 
 }

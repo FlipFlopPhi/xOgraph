@@ -9,6 +9,7 @@ import java.util.List;
 import ru.flip.xOgraph.Project;
 import ru.flip.xOgraph.model.Hex;
 import ru.flip.xOgraph.model.HexToken;
+import ru.flip.xOgraph.model.Map;
 import ru.flip.xOgraph.model.Shift;
 
 /**
@@ -63,6 +64,11 @@ public class FillAction extends AbstractAction {
 	public void undo() {
 		for (Hex target : targets)
 			target.token = oldColor;
+	}
+
+	@Override
+	public int[] getModifications() {
+		return new int[] {Map.MODIFIED_HEXES};
 	}
 
 }

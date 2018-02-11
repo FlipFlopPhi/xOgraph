@@ -46,7 +46,6 @@ public class Main {
 	/**
 	 * @param args
 	 */
-	@SuppressWarnings("serial")
 	public static void main(String[] args) {
 		
 		//Help me

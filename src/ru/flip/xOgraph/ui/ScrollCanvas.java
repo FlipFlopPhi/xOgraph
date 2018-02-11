@@ -9,6 +9,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 import ru.flip.xOgraph.Project;
+import ru.flip.xOgraph.model.Map;
 import ru.flip.xOgraph.model.Region;
 
 /**
@@ -54,7 +55,7 @@ public class ScrollCanvas extends JScrollPane {
 		double minRatio = Math.min(widthRatio, heightRatio);
 		Project.scale *= minRatio;
 		Project.zoomPanel.changeValue((int)(Project.scale*100));
-		Project.repaint();
+		Project.repaint(new int[] {Map.MODIFIED_ALL});
 		java.awt.Point topLeft = new java.awt.Point((int)(minX*minRatio), (int)(minY*minRatio));
 		this.getViewport().setViewPosition(topLeft);
 		

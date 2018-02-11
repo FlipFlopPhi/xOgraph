@@ -15,7 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import ru.flip.xOgraph.Project;
-import ru.flip.xOgraph.model.Point;
+import ru.flip.xOgraph.model.Map;
+import ru.flip.xOgraph.model.Location;
 
 /**
  * @author Vizu
@@ -23,7 +24,7 @@ import ru.flip.xOgraph.model.Point;
  */
 public class LocationOptionPane extends JDialog{
 
-	private Point location;
+	private Location location;
 	
 	private JTextField nameField;
 	private JButton confirmButton;
@@ -41,7 +42,7 @@ public class LocationOptionPane extends JDialog{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				closeDialog(true);
-				Project.repaint();
+				Project.repaint(new int[] {Map.MODIFIED_LOCATIONS});
 			}
 		});
 		cancelButton = new JButton("Cancel");
@@ -82,7 +83,7 @@ public class LocationOptionPane extends JDialog{
 		this.pack();
 	}
 
-	public void showDialog(Point poi) {
+	public void showDialog(Location poi) {
 		if (poi == null)
 			return;
 		location = poi;

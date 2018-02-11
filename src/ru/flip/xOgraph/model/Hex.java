@@ -20,7 +20,6 @@ public class Hex {
 	 */
 	public boolean selected = false;
 	
-	private Point point;
 	private Hex parent;
 	private Hex[] children;
 	private Position position;
@@ -87,23 +86,6 @@ public class Hex {
 		if (shift == null)
 			return children[0];
 		return children[shift.toInt()];
-	}
-
-	/**
-	 * Returns the point of interest (PoI) this hex contains (Does not return the PoI child hexes contain.)
-	 * Returns null if the hex contains no PoI.
-	 * @return the point of interest <b>this</b> hex (not its children) contains. Returns null if it contains no point of interest.
-	 */
-	public Point getPOI() {
-		return point;
-	}
-	
-	/**
-	 * Sets the current point of interest to the parameter. (the current one is overwritten)
-	 * @param point The point of interest of this hex.
-	 */
-	public void setPOI(Point point) {
-		this.point = point;
 	}
 
 	public Position getPosition() {return position;}

@@ -35,7 +35,7 @@ public class FileMenu extends JMenu {
 			public void actionPerformed(ActionEvent e) {
 				Project.setMap( new Map(8,6));
 				Project.updateListModels();
-				Project.repaint();
+				Project.repaint(new int[] {Map.MODIFIED_ALL});
 			}
 		});
 		this.add(itemNewMap);
@@ -50,7 +50,7 @@ public class FileMenu extends JMenu {
 					Map map = MapIO.readMap(file);
 					Project.setMap(map);
 					Project.updateListModels();
-					Project.repaint();
+					Project.repaint(new int[] {Map.MODIFIED_ALL});
 				}
 			}
 		});

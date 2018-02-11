@@ -14,6 +14,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import ru.flip.xOgraph.Project;
+import ru.flip.xOgraph.model.Map;
 
 /**
  * @author Vizu
@@ -47,7 +48,7 @@ public class XZoomSlider extends JPanel{
 				point.x *= Project.scale/oldScale;
 				point.y *= Project.scale/oldScale;
 				Project.scrollCanvas.centerOn(point);
-				Project.repaint();
+				Project.repaint(new int[] {Map.MODIFIED_ALL});
 			}
 		});
 		this.add(scaleSpinner);

@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 
 import ru.flip.xOgraph.Project;
 import ru.flip.xOgraph.Project.Tool;
-import ru.flip.xOgraph.actions.BorderAction;
+import ru.flip.xOgraph.actions.RegionAction;
 import ru.flip.xOgraph.model.Hex;
 import ru.flip.xOgraph.model.HexUtil;
 import ru.flip.xOgraph.model.Position;
@@ -66,7 +66,7 @@ public class BorderTool extends AbstractTool {
 				return;
 			}
 			if (currentBorder.corners.get(0) == hex.getPosition()) {
-				Project.commit(new BorderAction(currentBorder));
+				Project.commit(new RegionAction(currentBorder));
 				currentBorder = null;
 				return;
 			}

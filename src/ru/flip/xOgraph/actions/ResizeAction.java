@@ -34,6 +34,11 @@ public class ResizeAction extends AbstractAction {
 	public void undo() {
 		Project.setMap(oldMap);
 	}
+
+	@Override
+	public int[] getModifications() {
+		return new int[] {Map.MODIFIED_ALL};
+	}
 	
 
 }

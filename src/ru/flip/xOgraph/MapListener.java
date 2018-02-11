@@ -36,7 +36,6 @@ public class MapListener implements MouseListener {
 	@Override
 	public void mouseReleased(MouseEvent me) {
 		Project.currentTool.onClick(entered, me);
-		Project.repaint();
 	}
 
 	

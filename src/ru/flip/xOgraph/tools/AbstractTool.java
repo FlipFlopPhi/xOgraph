@@ -17,6 +17,7 @@ import ru.flip.xOgraph.Project;
 import ru.flip.xOgraph.Project.Tool;
 import ru.flip.xOgraph.model.Hex;
 import ru.flip.xOgraph.model.HexUtil;
+import ru.flip.xOgraph.model.Position;
 import ru.flip.xOgraph.ui.canvas.HexCanvas;
 
 /**

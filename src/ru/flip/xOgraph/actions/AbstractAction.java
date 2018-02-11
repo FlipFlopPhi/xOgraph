@@ -12,7 +12,8 @@ package ru.flip.xOgraph.actions;
  *
  */
 public abstract class AbstractAction {
-
+	
+	
 	/**
 	 * Commits this action.
 	 */
@@ -24,4 +25,11 @@ public abstract class AbstractAction {
 	 * incorrectly this can cause the action to undo another actions work.
 	 */
 	public abstract void undo();
+	
+	/**
+	 * Returns all fields modified by this action. If no field is modified, it should return an empty array, not null.
+	 * @return an array containing constants representing which fields are modified.
+	 */
+	public abstract int[] getModifications();
+	
 }

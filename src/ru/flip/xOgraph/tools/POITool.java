@@ -9,11 +9,17 @@ import javax.swing.JOptionPane;
 
 import ru.flip.xOgraph.Project;
 import ru.flip.xOgraph.Project.Tool;
+import ru.flip.xOgraph.actions.ListRemoveAction;
+import ru.flip.xOgraph.actions.LocationAction;
 import ru.flip.xOgraph.model.Hex;
+import ru.flip.xOgraph.model.Location;
+import ru.flip.xOgraph.model.Map;
+import ru.flip.xOgraph.model.Position;
 import ru.flip.xOgraph.ui.canvas.HexCanvas;
 
 /**
  * The PoItool is used to add, edit and remove points of interest on the map.
+ * 
  * @author Vizu
  *
  */
@@ -23,7 +29,9 @@ public class POITool extends AbstractTool {
 		super(canvas, "POIIcon.png");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ru.flip.xOgraph.tools.AbstractTool#onClick(java.awt.event.MouseEvent)
 	 */
 	@Override
@@ -31,25 +39,36 @@ public class POITool extends AbstractTool {
 		int mouseX = me.getX();
 		int mouseY = me.getY();
 		Hex hex = getHexClicked(mouseX, mouseY);
-		
-		switch(me.getButton()) {
-		case MouseEvent.BUTTON1 :
-			if (hex.getPOI() == null) {
-				Project.addPoint(hex);
-			} else {
-				int response = JOptionPane.showConfirmDialog(null, "Do you want to remove this \n  point of interest?", "Confirm",
-				        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			    if (response == JOptionPane.YES_OPTION) {
-			    	Project.removePoint(hex);
-			    }
+		if (hex == null)
+			return;
+		Position position = hex.getPosition();
+		Location location = null;
+		for (Location locationFromList : Project.getMap().points) {
+			if (locationFromList.getPosition().equals(position)) {
+				location = locationFromList;
+				break;
 			}
-			
+		}
+		switch (me.getButton()) {
+		case MouseEvent.BUTTON1:
+			if (location == null) {
+				Project.commit(new LocationAction(new Location(position)));
+			} else {
+				int response = JOptionPane.showConfirmDialog(null, "Do you want to remove this \n  point of interest?",
+						"Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				if (response == JOptionPane.YES_OPTION) {
+					Project.commit(new ListRemoveAction<Location>(Project.getMap().points, location,
+							new int[] { Map.MODIFIED_LOCATIONS }));
+				}
+			}
+
 			break;
-		case MouseEvent.BUTTON2 :
+		case MouseEvent.BUTTON2:
 			break;
-		case MouseEvent.BUTTON3 :
-			if (hex.getPOI() != null)
-				Project.locationOptions.showDialog(hex.getPOI());
+		case MouseEvent.BUTTON3:
+
+			if (location != null)
+				Project.locationOptions.showDialog(location);
 			break;
 		default:
 			break;

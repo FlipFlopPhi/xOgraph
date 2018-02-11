@@ -17,7 +17,7 @@ import ru.flip.xOgraph.model.Hex;
 import ru.flip.xOgraph.model.HexToken;
 import ru.flip.xOgraph.model.Line;
 import ru.flip.xOgraph.model.Map;
-import ru.flip.xOgraph.model.Point;
+import ru.flip.xOgraph.model.Location;
 import ru.flip.xOgraph.model.Region;
 import ru.flip.xOgraph.tools.AbstractTool;
 import ru.flip.xOgraph.tools.BorderTool;
@@ -107,18 +107,22 @@ public final class Project {
 	
 	public static void setBGImage(BufferedImage img) {
 		bgImage = img;
-		repaint();
+		repaint(new int[] {Map.MODIFIED_BGIMAGE});
 	}
 	
-	public static void repaint() {
+	public static void repaint(int[] fieldsModified) {
 		int oldRadius = canvas.radius;
 		canvas.radius = (int) (32 * scale);
 		if (oldRadius!= canvas.radius)
 			distanceWindow.update();
 		canvas.setSize(canvas.getPreferredSize());
-		frame.repaint();
+		
+		canvas.setFieldsModified(fieldsModified);
+		canvas.repaint();
 		
 	}
+	
+	
 
 	public static void updateListModels() {
 		listModel.clear();
@@ -136,14 +140,6 @@ public final class Project {
 	public static void deselect(Hex hex) {
 		hex.selected = false;
 		selection.remove(hex);
-	}
-
-	public static void addPoint(Hex hex) {
-		map.addPoint( new Point(hex));
-	}
-
-	public static void removePoint(Hex hex) {
-		map.removePointFromHex(hex);
 	}
 
 	public static void setTool(Tool toolID) {
@@ -175,6 +171,9 @@ public final class Project {
 		}
 		actionLog.add(action);
 		logIterator++;
+		
+		repaint(action.getModifications());
+		
 	}
 	
 	public static void undo() {
@@ -183,13 +182,16 @@ public final class Project {
 		AbstractAction action = actionLog.get(logIterator-1);
 		action.undo();
 		logIterator--;
+		repaint(action.getModifications());
 	}
 	
 	public static void redo() {
 		if (!canRedo())
 			return;
-		actionLog.get(logIterator).commit();
+		AbstractAction action = actionLog.get(logIterator);
+		action.commit();
 		logIterator++;
+		repaint(action.getModifications());
 	}
 	
 	public static int getIterator() {return logIterator;}
@@ -203,7 +205,7 @@ public final class Project {
 		for(Region region : map.regions) {
 			region.changeDepth(drawDepth);
 		}
-		repaint();
+		repaint(new int[] {Map.MODIFIED_ALL});
 	}
 
 	

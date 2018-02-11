@@ -6,6 +6,7 @@ package ru.flip.xOgraph.actions;
 import ru.flip.xOgraph.Project;
 import ru.flip.xOgraph.model.Hex;
 import ru.flip.xOgraph.model.Line;
+import ru.flip.xOgraph.model.Map;
 
 /**
  * This action adds a line to the map.
@@ -38,6 +39,11 @@ public class LineAction extends AbstractAction {
 	@Override
 	public void undo() {
 		Project.getMap().lines.remove(line);
+	}
+
+	@Override
+	public int[] getModifications() {
+		return new int[] {Map.MODIFIED_LINES};
 	}
 
 }

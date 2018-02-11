@@ -12,6 +12,8 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Stroke;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,7 +25,7 @@ import ru.flip.xOgraph.Project;
 import ru.flip.xOgraph.model.Hex;
 import ru.flip.xOgraph.model.Line;
 import ru.flip.xOgraph.model.Map;
-import ru.flip.xOgraph.model.Point;
+import ru.flip.xOgraph.model.Location;
 import ru.flip.xOgraph.model.Position;
 import ru.flip.xOgraph.model.Region;
 import ru.flip.xOgraph.ui.UIUtil;
@@ -33,12 +35,16 @@ public class HexCanvas extends JPanel implements Scrollable{
 	
 	public int radius = 32;//HOOK
 	
-	
+	private BufferedImage bufferedHexes;
+	private BufferedImage bufferedLocations;
+	private BufferedImage bufferedRegions;
 	private List<HexDrawOperation> drawQueue;
+	private int[] fieldsModified;
 	
 	public HexCanvas() {
 		super();
 		drawQueue = new LinkedList<HexDrawOperation>();
+		fieldsModified = new int[] {Map.MODIFIED_ALL};
 		addMouseListener(new MapListener(this));
 		setSize(740, 620);
 	}
@@ -46,6 +52,11 @@ public class HexCanvas extends JPanel implements Scrollable{
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		long t0 = System.nanoTime();
+		
+		
+		
+		Map map = Project.getMap();
 		Graphics2D g2d = (Graphics2D) g;
 		int r = radius;
 		g.setColor(Color.black);
@@ -53,45 +64,40 @@ public class HexCanvas extends JPanel implements Scrollable{
 		if (!Project.imageOnForeground)
 			drawBackground(g, r);
 		
-		//draw grid
-		Map map = Project.getMap();
-		for(int x=0; x < map.getWidth(); x++) {
-			for(int y=0; y < map.getHeight(); y++) {
-				int oX, oY;
-				oX = (int) Math.round(x*(r*1.5)) + r;
-				oY = (int) Math.round(y*r*Math.sqrt(3) + (x%2)*(r/2)*Math.sqrt(3)) + r;
-				drawHex(g, map.getHex(x, y), oX, oY, r, 0);
-			}
+		//drawing hexes
+		if (isFieldModified(Map.MODIFIED_HEXES)) {
+			bufferedHexes = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+			drawHexes(bufferedHexes.getGraphics(), r, map);
 		}
-		while(!drawQueue.isEmpty()) {
-			drawQueue.remove(0).execute(g);
-		}
+		g.drawImage(bufferedHexes, 0, 0, null);
+		long t1 = System.nanoTime();
 		
 		//draw locations
-		g.drawString(map.getWidth()+":"+map.getHeight(), 32, 32);
-		for(Point location: map.getPoints()) {
-			int x = location.getPosition().getCanX(radius);
-			int y = location.getPosition().getCanY(radius);
-			
-			Font oldFont = g.getFont();
-			g.setFont(new Font("arial bold", Font.PLAIN, 16));
-			UIUtil.drawCenteredString(g, x, y, location.name);
-			g.setFont(oldFont);
+		if(isFieldModified(Map.MODIFIED_LOCATIONS)) {
+			bufferedLocations = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+			drawLocations(bufferedLocations.getGraphics(), r, map.getPoints(), map);
 		}
+		g.drawImage(bufferedLocations, 0, 0, null);
 		
 		//draw regions
-		for(Region region : Project.getMap().regions) {
-			drawRegion((Graphics2D) g, region);
+		if(isFieldModified(Map.MODIFIED_REGION)) {
+			bufferedRegions = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+			for(Region region : Project.getMap().regions) {
+				drawRegion((Graphics2D) bufferedRegions.getGraphics(), region);
+			}
 		}
+		g.drawImage(bufferedRegions, 0, 0, null);
 		
 		//draw lines
-		g.setColor(Color.BLACK);
-		for(Line line : Project.getMap().lines) {
-			for(int i=0; i<line.pieces.size()-1; i++) {
-				Position pos1 = line.pieces.get(i);
-				Position pos2 = line.pieces.get(i+1);
-				g.drawLine(pos1.getCanX(radius), pos1.getCanY(radius)
-						, pos2.getCanX(radius), pos2.getCanY(radius));
+		if(isFieldModified(Map.MODIFIED_LINES)) {
+			g.setColor(Color.BLACK);
+			for(Line line : Project.getMap().lines) {
+				for(int i=0; i<line.pieces.size()-1; i++) {
+					Position pos1 = line.pieces.get(i);
+					Position pos2 = line.pieces.get(i+1);
+					g.drawLine(pos1.getCanX(radius), pos1.getCanY(radius)
+							, pos2.getCanX(radius), pos2.getCanY(radius));
+				}
 			}
 		}
 		
@@ -106,7 +112,39 @@ public class HexCanvas extends JPanel implements Scrollable{
 		
 		
 		
-		//draw graphic scale
+		long t2 = System.nanoTime();
+		System.out.println("hexes: "+(t1-t0));
+		System.out.println("All  : "+(t2-t0));
+	}
+	
+	private void drawHexes(Graphics g, int r, Map map) {
+		//draw grid
+		
+		for(int x=0; x < map.getWidth(); x++) {
+			for(int y=0; y < map.getHeight(); y++) {
+				int oX, oY;
+				oX = (int) Math.round(x*(r*1.5)) + r;
+				oY = (int) Math.round(y*r*Math.sqrt(3) + (x%2)*(r/2)*Math.sqrt(3)) + r;
+				drawHex(g, map.getHex(x, y), oX, oY, r, 0);
+			}
+		}
+		while(!drawQueue.isEmpty()) {
+			drawQueue.remove(0).execute(g);
+		}
+	}
+	
+	private void drawLocations(Graphics g, int radius, Location[] locations, Map map) {
+		for(Location location: locations) {
+			if (map.getHex(location.getPosition()).isEnhanced())
+				continue;
+			int x = location.getPosition().getCanX(radius);
+			int y = location.getPosition().getCanY(radius);
+			
+			Font oldFont = g.getFont();
+			g.setFont(new Font("arial bold", Font.PLAIN, 16));
+			UIUtil.drawCenteredString(g, x, y, location.name);
+			g.setFont(oldFont);
+		}
 	}
 	
 	private class HexDrawOperation {
@@ -192,7 +230,6 @@ public class HexCanvas extends JPanel implements Scrollable{
 			Shape oldClip = g.getClip();
 			Rectangle bounds = g.getClipBounds();
 			g.setClip(new Polygon(xPoints, yPoints, 6));
-			g.clipRect(bounds.x, bounds.y, bounds.width, bounds.height);
 			g.drawImage(hex.token.getImage(), oX-r, oY-r
 					, 2*r, 2*r, null);
 			g.setClip(oldClip);
@@ -214,18 +251,6 @@ public class HexCanvas extends JPanel implements Scrollable{
 			return;
 		}
 		
-		
-		
-		Point point;
-		if ((point = hex.getPOI()) != null) {
-			Shape oldClip = g.getClip();
-			Rectangle bounds = g.getClipBounds();
-			g.setClip(new Polygon(xPoints, yPoints, 6));
-			g.clipRect(bounds.x, bounds.y, bounds.width, bounds.height);
-			g.drawImage(point.getImage(), oX-r, oY-r
-					, 2*r, 2*r, null);
-			g.setClip(oldClip);
-		}
 		//draw grid
 		if (Project.drawGrid)
 			g.drawPolygon(xPoints, yPoints, 6);
@@ -287,5 +312,17 @@ public class HexCanvas extends JPanel implements Scrollable{
 	@Override
 	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
 		return 10;
+	}
+
+	public void setFieldsModified(int[] fieldsModified) {
+		this.fieldsModified = fieldsModified;
+	}
+	
+	public boolean isFieldModified(int fieldID) {
+		for(int field : fieldsModified) {
+			if (field == fieldID | field == Map.MODIFIED_ALL)
+				return true;
+		}
+		return false;
 	}
 }

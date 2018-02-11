@@ -15,6 +15,8 @@ import javax.swing.JPopupMenu;
 
 import ru.flip.xOgraph.Project;
 import ru.flip.xOgraph.model.Hex;
+import ru.flip.xOgraph.model.Location;
+import ru.flip.xOgraph.model.Map;
 import ru.flip.xOgraph.model.Region;
 
 /**
@@ -24,6 +26,7 @@ import ru.flip.xOgraph.model.Region;
 public class CanvasPopUpMenu extends JPopupMenu {
 	
 	private List<Region> regionsClicked;
+	private Location locationClicked;
 	public Hex hexClicked;
 	private JMenu regionMenu;
 	
@@ -38,7 +41,7 @@ public class CanvasPopUpMenu extends JPopupMenu {
 			public void actionPerformed(ActionEvent e) {
 				if (!hexClicked.isEnhanced())
 					hexClicked.enhance();
-				Project.repaint();
+				Project.repaint(new int[] {Map.MODIFIED_HEXES});
 			}
 		});
 		this.add(zoomItem);
@@ -52,7 +55,7 @@ public class CanvasPopUpMenu extends JPopupMenu {
 					hex.enhance();
 					Project.deselect(hex);
 				}
-				Project.repaint();
+				Project.repaint(new int[] {Map.MODIFIED_HEXES});
 			}
 		});
 		this.add(zoomAllItem);
@@ -65,7 +68,7 @@ public class CanvasPopUpMenu extends JPopupMenu {
 				if (parent != null) {
 					parent.dehance();
 				}
-				Project.repaint();
+				Project.repaint(new int[] {Map.MODIFIED_HEXES});
 			}
 		});
 		this.add(dezoomItem);
@@ -73,14 +76,14 @@ public class CanvasPopUpMenu extends JPopupMenu {
 		JMenuItem editPoiItem = new JMenuItem("Edit POI") {
 			@Override
 			public boolean isEnabled() {
-				return (hexClicked != null && hexClicked.getPOI() != null);
+				return (locationClicked != null);
 			}
 		};
 		editPoiItem.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Project.locationOptions.showDialog(hexClicked.getPOI());
+				Project.locationOptions.showDialog(locationClicked);
 			}
 		});
 		this.add(editPoiItem);
@@ -105,7 +108,7 @@ public class CanvasPopUpMenu extends JPopupMenu {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Project.clearSelection();
-				Project.repaint();
+				Project.repaint(new int[] {Map.MODIFIED_HEXES});
 			}
 		});
 		this.add(clearSelItem);
@@ -131,6 +134,13 @@ public class CanvasPopUpMenu extends JPopupMenu {
 				}
 			});
 			regionMenu.add(menuItem);
+		}
+		locationClicked = null;
+		for(Location location : Project.getMap().points) {
+			if (location.getPosition() == hexClicked.getPosition()) {
+				locationClicked = location;
+				break;
+			}
 		}
 		
 	}
